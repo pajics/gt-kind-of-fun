@@ -22,7 +22,8 @@ namespace NrgsCodingChallenge.Controllers
         [HttpGet("{id:int}")]
         public async Task<Player> GetById(int id, CancellationToken cancellationToken)
         {
-            return id.ToString();
+            return new Player(id, "Doe", "John", 
+                new Address("Infinite Loop", "1/1/2", "1234", "Los Angeles", "Californication"));
         }
 
         // GET api/values/byemail/someone@example.com
