@@ -10,25 +10,36 @@ namespace NrgsCodingChallenge.Repositories
         Player GetByNick(string emailornick);
     }
 
-    class DataProvider : IDataProvider
+    public class DataProvider : IDataProvider
     {
-        private readonly IDictionary<int, Player> _playersById;
-        private readonly IDictionary<string, Player> _playersByEmail;
-        private readonly IDictionary<string, Player> _playersByNick;
+        private readonly IDictionary<int, Player> _playersById = new Dictionary<int, Player>();
+        private readonly IDictionary<string, Player> _playersByEmail = new Dictionary<string, Player>();
+        private readonly IDictionary<string, Player> _playersByNick = new Dictionary<string, Player>();
 
         public DataProvider()
         {
-            var player = new Player(
+            AddPlayers(new Player(
                 42,
                 "Doe",
                 "John",
                 new Address("Infinite Loop", "1/1/2", "1234", "Los Angeles", "Californication"),
                 "john.doe@example.com",
-                "jodo");
+                "jodo"));
+        }
 
-            _playersById = new Dictionary<int, Player> { { player.Id, player } };
-            _playersByEmail = new Dictionary<string, Player> { { player.Email, player } };
-            _playersByNick = new Dictionary<string, Player> { { player.NickName, player } };
+        public DataProvider(params Player[] players)
+        {
+            AddPlayers(players);
+        }
+
+        private void AddPlayers(params Player[] players)
+        {
+            foreach (var player in players ?? new Player[0])
+            {
+                _playersById.Add(player.Id, player);
+                _playersByEmail.Add(player.Email, player);
+                _playersByNick.Add(player.NickName, player);
+            }
         }
 
         public Player GetById(int id)

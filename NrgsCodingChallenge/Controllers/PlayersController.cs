@@ -22,15 +22,16 @@ namespace NrgsCodingChallenge.Controllers
 
         // GET api/values/5
         [HttpGet("{id:int}")]
-        public async Task<Player> GetById(int id, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
         {
             Player player = _dataProvider.GetById(id);
 
             if (player != null)
             {
-                return player;
+                return new ObjectResult(player);
             }
-            throw new ArgumentOutOfRangeException(nameof(id), "No player found with that id.");
+
+            return new NotFoundResult();
         }
 
         // GET api/values/byemail/someone@example.com
