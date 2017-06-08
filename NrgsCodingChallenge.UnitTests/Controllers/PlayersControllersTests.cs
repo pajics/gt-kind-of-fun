@@ -32,7 +32,7 @@ namespace NrgsCodingChallenge.UnitTests.Controllers
         {
             var controller = new PlayersController(new DataProvider());
 
-            NotFoundResult foundResult = await controller.GetById(42, CancellationToken.None) as NotFoundResult;
+            NotFoundResult foundResult = await controller.GetById(43, CancellationToken.None) as NotFoundResult;
 
             Assert.NotNull(foundResult);
         }
