@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NrgsCodingChallenge.Middlewares;
 using Serilog;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace NrgsCodingChallenge
 {
@@ -37,6 +38,10 @@ namespace NrgsCodingChallenge
         {
             // Add framework services.
             services.AddMvc();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "Where is our FREE Beer?", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -46,6 +51,13 @@ namespace NrgsCodingChallenge
 
             app.UseMiddleware<UnhandledExceptionHandlerLoggerMiddleware>();
             app.UseMvc();
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS etc.), specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "TEAM 1 V1");
+            });
         }
     }
 }
