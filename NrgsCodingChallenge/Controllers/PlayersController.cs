@@ -1,30 +1,69 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using NrgsCodingChallenge.Models;
 
 namespace NrgsCodingChallenge.Controllers
 {
     [Route("api/[controller]")]
     public class PlayersController : Controller
     {
-        [HttpGet("{id:int}")]
-        public string GetById(int id)
+        private readonly IDictionary<int, Player> _playersById;
+        private readonly IDictionary<string, Player> _playersByEmail;
+        private readonly IDictionary<string, Player> _playersByNick;
+
+        public PlayersController()
         {
-            return "Id: " + id;
+            var player = new Player(
+                42,
+                "Doe",
+                "John",
+                new Address("Infinite Loop", "1/1/2", "1234", "Los Angeles", "Californication"),
+                "john.doe@example.com",
+                "jodo");
+
+            _playersById = new Dictionary<int, Player> { { player.Id, player } };
+            _playersByEmail = new Dictionary<string, Player> { { player.Email, player } };
+            _playersByNick = new Dictionary<string, Player> { { player.NickName, player } };
+
         }
 
-        [HttpGet("{email:regex(^([[0-9a-zA-Z]]([[-\\.\\w]]*[[0-9a-zA-Z]])*@([[0-9a-zA-Z]][[-\\w]]*[[0-9a-zA-Z]]\\.)+[[a-zA-Z]]{{2,9}})$)}")]
-        public string GetByEmail(string email)
+        // GET api/values/5
+        [HttpGet("{id:int}")]
+        public async Task<Player> GetById(int id, CancellationToken cancellationToken)
         {
-            return "Email: " + email;
+            if (_playersById.ContainsKey(id))
+            {
+                return _playersById[id];
+            }
+            throw new ArgumentOutOfRangeException(nameof(id), "No player found with that id.");
+        }
+
+        // GET api/values/byemail/someone@example.com
+        // GET api/values/naughtiusmaximus        
+        [HttpGet("{email:regex(^([[0-9a-zA-Z]]([[-\\.\\w]]*[[0-9a-zA-Z]])*@([[0-9a-zA-Z]][[-\\w]]*[[0-9a-zA-Z]]\\.)+[[a-zA-Z]]{{2,9}})$)}")]
+        public async Task<Player> GetByEmail(string email, CancellationToken cancellationToken)
+        {
+            if (_playersByEmail.ContainsKey(email))
+            {
+                return _playersByEmail[email];
+            }
+
+            throw new ArgumentOutOfRangeException(nameof(email), "No player found with that email or nick.");
         }
 
         [HttpGet("{nick}")]
-        public string GetByNick(string nick)
+        public async Task<Player> GetByNick(string nick, CancellationToken cancellationToken)
         {
-            return "Nick: " + nick;
+            if (_playersByNick.ContainsKey(nick))
+            {
+                return _playersByNick[nick];
+            }
+
+            throw new ArgumentOutOfRangeException(nameof(nick), "No player found with that email or nick.");
         }
     }
 }
