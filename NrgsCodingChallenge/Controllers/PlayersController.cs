@@ -66,29 +66,5 @@ namespace NrgsCodingChallenge.Controllers
 
             throw new ArgumentOutOfRangeException(nameof(emailornick), "No player found with that email or nick.");
         }
-
-        //[HttpGet("/bynickname/{nickname}")]
-        //public string GetByNickname(string nickname)
-        //{
-        //    return nickname;
-        //}
-
-        // POST api/values
-        [HttpPost]
-        public async Task Post([FromBody]string value, CancellationToken cancellationToken)
-        {
-        }
-
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public async Task Put(int id, [FromBody]string value, CancellationToken cancellationToken)
-        {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public async Task Delete(int id, CancellationToken cancellationToken)
-        {
-        }
     }
 }
