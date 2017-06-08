@@ -42,6 +42,8 @@ namespace NrgsCodingChallenge
             {
                 c.SwaggerDoc("v1", new Info { Title = "Where is our FREE Beer?", Version = "v1" });
             });
+            services.AddScoped<IDataProvider, DataProvider>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
