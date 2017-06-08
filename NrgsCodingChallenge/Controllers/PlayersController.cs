@@ -9,50 +9,22 @@ namespace NrgsCodingChallenge.Controllers
     [Route("api/[controller]")]
     public class PlayersController : Controller
     {
-        // GET api/players
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET api/values/5
         [HttpGet("{id:int}")]
         public string GetById(int id)
         {
-            return id.ToString();
+            return "Id: " + id;
         }
 
-        // GET api/values/byemail/someone@example.com
-        // GET api/values/naughtiusmaximus
-        [HttpGet("{emailornick}")]
-        public string GetByEmailOrNick(string emailornick)
+        [HttpGet("{email:regex(^([[0-9a-zA-Z]]([[-\\.\\w]]*[[0-9a-zA-Z]])*@([[0-9a-zA-Z]][[-\\w]]*[[0-9a-zA-Z]]\\.)+[[a-zA-Z]]{{2,9}})$)}")]
+        public string GetByEmail(string email)
         {
-            return emailornick;
+            return "Email: " + email;
         }
 
-        //[HttpGet("/bynickname/{nickname}")]
-        //public string GetByNickname(string nickname)
-        //{
-        //    return nickname;
-        //}
-
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody]string value)
+        [HttpGet("{nick}")]
+        public string GetByNick(string nick)
         {
-        }
-
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            return "Nick: " + nick;
         }
     }
 }
