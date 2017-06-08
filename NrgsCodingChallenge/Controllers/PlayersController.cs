@@ -5,39 +5,30 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using NrgsCodingChallenge.Models;
+using NrgsCodingChallenge.Repositories;
 
 namespace NrgsCodingChallenge.Controllers
 {
     [Route("api/[controller]")]
     public class PlayersController : Controller
     {
-        private readonly IDictionary<int, Player> _playersById;
-        private readonly IDictionary<string, Player> _playersByEmail;
-        private readonly IDictionary<string, Player> _playersByNick;
+        private readonly IDataProvider _dataProvider;
 
-        public PlayersController()
+
+        public PlayersController(IDataProvider dataProvider)
         {
-            var player = new Player(
-                42,
-                "Doe",
-                "John",
-                new Address("Infinite Loop", "1/1/2", "1234", "Los Angeles", "Californication"),
-                "john.doe@example.com",
-                "jodo");
-
-            _playersById = new Dictionary<int, Player> { { player.Id, player } };
-            _playersByEmail = new Dictionary<string, Player> { { player.Email, player } };
-            _playersByNick = new Dictionary<string, Player> { { player.NickName, player } };
-
+            _dataProvider = dataProvider;
         }
 
         // GET api/values/5
         [HttpGet("{id:int}")]
         public async Task<Player> GetById(int id, CancellationToken cancellationToken)
         {
-            if (_playersById.ContainsKey(id))
+            Player player = _dataProvider.GetById(id);
+
+            if (player != null)
             {
-                return _playersById[id];
+                return player;
             }
             throw new ArgumentOutOfRangeException(nameof(id), "No player found with that id.");
         }
@@ -47,9 +38,11 @@ namespace NrgsCodingChallenge.Controllers
         [HttpGet("{email:regex(^([[0-9a-zA-Z]]([[-\\.\\w]]*[[0-9a-zA-Z]])*@([[0-9a-zA-Z]][[-\\w]]*[[0-9a-zA-Z]]\\.)+[[a-zA-Z]]{{2,9}})$)}")]
         public async Task<Player> GetByEmail(string email, CancellationToken cancellationToken)
         {
-            if (_playersByEmail.ContainsKey(email))
+            Player player = _dataProvider.GetByEmail(email);
+
+            if (player != null)
             {
-                return _playersByEmail[email];
+                return player;
             }
 
             throw new ArgumentOutOfRangeException(nameof(email), "No player found with that email or nick.");
@@ -58,9 +51,11 @@ namespace NrgsCodingChallenge.Controllers
         [HttpGet("{nick}")]
         public async Task<Player> GetByNick(string nick, CancellationToken cancellationToken)
         {
-            if (_playersByNick.ContainsKey(nick))
+            Player player = _dataProvider.GetByNick(nick);
+
+            if (player != null)
             {
-                return _playersByNick[nick];
+                return player;
             }
 
             throw new ArgumentOutOfRangeException(nameof(nick), "No player found with that email or nick.");
