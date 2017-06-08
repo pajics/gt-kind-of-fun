@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NrgsCodingChallenge.Middlewares;
+using Serilog;
 
 namespace NrgsCodingChallenge
 {
@@ -15,6 +16,12 @@ namespace NrgsCodingChallenge
     {
         public Startup(IHostingEnvironment env)
         {
+
+            Log.Logger = new LoggerConfiguration()
+              .Enrich.FromLogContext()
+              .WriteTo.LiterateConsole()
+              .CreateLogger();
+
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -35,8 +42,7 @@ namespace NrgsCodingChallenge
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
+            loggerFactory.AddSerilog();
 
             app.UseMiddleware<UnhandledExceptionHandlerLoggerMiddleware>();
             app.UseMvc();
