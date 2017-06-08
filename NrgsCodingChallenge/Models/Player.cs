@@ -4,12 +4,14 @@ namespace NrgsCodingChallenge.Models
 {
     public class Player
     {
-        public Player(int id, string surname, string name, Address address)
+        public Player(int id, string surname, string name, Address address, string email, string nickName)
         {
             Id = id;
             Surname = surname;
             Name = name;
             Address = address;
+            Email = email;
+            NickName = nickName;
         }
 
         public int Id { get; }
@@ -17,6 +19,10 @@ namespace NrgsCodingChallenge.Models
         public string Surname { get; }
         public string Name { get; }
         public Address Address { get; }
+
+        public string Email { get; }
+
+        public string NickName { get; }
     }
 
     public class Address
